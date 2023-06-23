@@ -1,27 +1,27 @@
-{% layout 'layout.liquid'%}
+{% layout 'layout.liquid' %}
 {% block content %}
-<div>
+  <div>
     <h2 class="display-6">All Examples</h2>
     <div class="row">
-        {% for example in examples %}
-        <div class="card" style="width: 18rem;">
+      {% for example in artData %}
+        {% if example.image_id %}
+          <div class="card mb-2" style="width: 100vh;">
             <h5 class="card-header">{{ example.title }}</h5>
             <div class="card-body">
-                <h5 class="card-title">
-                    Ready?: {{ example.ready }}
-                </h5>
-                <p class="card-text">
-                    Body: {{ example.body }}
-                </p>
-                <p class="card-text">
-                    Amount: {{ example.amount }}
-                </p>
-                <a href="/examples/{{ example.id }}" class="btn btn-info">
-                    View {{ example.title }}
+              
+                <a href="/examples/{{ example.id }}" class="art">
+                <img
+                src="{{ artConfig  }}{{ example.image_id }}/full/843,/0/default.jpg"
+                style="width: 100%"
+                alt="{{ example.alt_text }}">
                 </a>
+                <p class="card-text">
+                  {{ example.artist_display }}
+                </p>
             </div>
-        </div>
-        {% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
     </div>
-</div>
+  </div>
 {% endblock %}

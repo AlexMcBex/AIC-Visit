@@ -1,11 +1,38 @@
 // Import Dependencies
 const express = require('express')
 const Example = require('../models/example')
+const user = require('./user')
+const { default: axios } = require('axios')
 
 // Create router
 const router = express.Router()
 
 // Router Middleware
+
+
+// Routes
+
+// index ALL
+// router.get('/', (req, res) => {
+// 	Example.find({})
+// 	.then(examples => {
+// 			const username = req.session.username
+// 			const loggedIn = req.session.loggedIn
+			
+// 			res.render('examples/index', { examples, username, loggedIn })
+// 		})
+// 		.catch(error => {
+// 			res.redirect(`/error?error=${error}`)
+// 		})
+// })
+router.get('/', async (req,  res)=>{
+	const artInfo = await axios(`${process.env.API_URL}?fields=id,title,artist_display,image_id,alt_text`)
+	const artData = artInfo.data.data
+	const artConfig = artInfo.data.config.iiif_url+'/'
+	console.log(artConfig)
+	res.render('examples/index', {artData, artConfig, ...req.session})
+})
+
 // Authorization middleware
 // If you have some resources that should be accessible to everyone regardless of loggedIn status, this middleware can be moved, commented out, or deleted. 
 router.use((req, res, next) => {
@@ -18,38 +45,21 @@ router.use((req, res, next) => {
 		res.redirect('/auth/login')
 	}
 })
-
-// Routes
-
-// index ALL
-router.get('/', (req, res) => {
-	Example.find({})
-		.then(examples => {
-			const username = req.session.username
-			const loggedIn = req.session.loggedIn
-			
-			res.render('examples/index', { examples, username, loggedIn })
-		})
-		.catch(error => {
-			res.redirect(`/error?error=${error}`)
-		})
-})
-
 // index that shows only the user's examples
 router.get('/mine', (req, res) => {
-    // destructure user info from req.session
+	// destructure user info from req.session
     const { username, userId, loggedIn } = req.session
 	Example.find({ owner: userId })
-		.then(examples => {
-			res.render('examples/index', { examples, username, loggedIn })
-		})
+	.then(examples => {
+		res.render('examples/index', { examples, username, loggedIn })
+	})
 		.catch(error => {
 			res.redirect(`/error?error=${error}`)
 		})
-})
-
-// new route -> GET route that renders our page with the form
-router.get('/new', (req, res) => {
+	})
+	
+	// new route -> GET route that renders our page with the form
+	router.get('/new', (req, res) => {
 	const { username, userId, loggedIn } = req.session
 	res.render('examples/new', { username, loggedIn })
 })
