@@ -9,13 +9,18 @@
           Art Pieces
         {% endif %}
       </h2>
+      <small>page: {{page}}</small><br>
       {% if page <= 1 %}
         <div class="btn">Previous Page</div>
       {% else %}
-        <a href="/arts?page={{ page | minus: 1 }}" class="btn btn-success">Previous Page</a>
+        <a href="/arts?page={{ page | minus: 1 }}&q={{ search }}" class="btn btn-success">Previous Page</a>
       {% endif %}
-      <a href="/arts?page={{ page | plus: 1 }}" class="btn btn-success">Next Page</a>
-    </div>
+      {% if artData.size < 50%}
+      <div class="btn">Previous Page</div>
+      {% else %}
+      <a href="/arts?page={{ page | plus: 1 }}&q={{ search }}" class="btn btn-success">Next Page</a>
+      {% endif %}
+      </div>
     <div class="row">
       {% for art in artData %}
         {% if art.image_id %}
