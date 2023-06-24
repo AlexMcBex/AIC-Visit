@@ -27,6 +27,8 @@
           <a href="/auth/signup" class="ms-2 nav-link text-light">Sign Up</a>
           <a href="/auth/login" class="ms-2 nav-link text-light">Sign In</a>
         {% endif %}
+        <form action="/arts/?q={{ nameTBF }}" method="GET">
+        <input style="width: 160px; height: 40px; border-radius: 3px;"  class="ms-3 mt-3" type="text" name="q" placeholder="Search Art..."><input type="submit" class="btn btn-success" value="Search" style="width: 80px; height: 40px"></form>
       </div>
     </div>
   </nav>

@@ -2,7 +2,13 @@
 {% block content %}
   <div class="container-lg">
     <div class="text-center">
-      <h2 class="display-4">Art Pieces</h2>
+      <h2 class="display-4">
+        {% if search %}
+          Results found for: "{{ search }}"
+        {% else %}
+          Art Pieces
+        {% endif %}
+      </h2>
       {% if page <= 1 %}
         <div class="btn">Previous Page</div>
       {% else %}
@@ -17,13 +23,13 @@
             <h5 class="card-header">
               {% assign maxLength = 31 %}
               {% assign myString = art.title %}
-              
+
               {% if myString.size > maxLength %}
                 {% assign croppedString = myString | truncate: maxLength, "..." %}
               {% else %}
                 {% assign croppedString = myString %}
               {% endif %}
-                {{ croppedString }}
+              {{ croppedString }}
             </h5>
             <a href="/arts/{{ art.id }}" class="art">
               <div class="card-body" style="background-image: url('{{ artConfig  }}{{ art.image_id }}/full/843,/0/default.jpg'); height:41vh; background-position:center"></div>
@@ -31,7 +37,15 @@
             <div class="card-footer">
 
               <p class="card-text">
-                {{ art.artist_display }}
+                {% assign maxLengthDesc = 38 %}
+                {% assign artDesc = art.artist_display %}
+  
+                {% if artDesc.size > maxLengthDesc %}
+                  {% assign croppedDesc = artDesc | truncate: maxLengthDesc, "..." %}
+                {% else %}
+                  {% assign croppedDesc = artDesc %}
+                {% endif %}
+                {{ croppedDesc }}
               </p>
             </div>
           </div>

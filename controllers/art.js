@@ -20,12 +20,13 @@ router.get('/', async (req,  res)=>{
 	}else{
 		page = 1
 	}
-	const artInfo = await axios(`${process.env.API_URL}/search?fields=id,title,artist_display,image_id,alt_text&page=${page}&limit=50&q=`)
+	const search = req.query.q
+	const artInfo = await axios(`${process.env.API_URL}/search?fields=id,title,artist_display,image_id,alt_text&page=${page}&limit=50&q=${search}`)
 	const artData = artInfo.data.data
 	const artConfig = artInfo.data.config.iiif_url+'/'
 	const artPage = artInfo.data.pagination
-	console.log("A Sunday on La Grande Jatte — 1884".length)
-	res.render('arts/index', {artData, artConfig, page, ...req.session})
+	console.log("Rembrandt Harmensz. van Rijn Dutch, 1606–".length)
+	res.render('arts/index', {artData, artConfig, page, search, ...req.session})
 })
 
 // show route
