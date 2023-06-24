@@ -24,7 +24,7 @@ router.get('/', async (req,  res)=>{
 	const artData = artInfo.data.data
 	const artConfig = artInfo.data.config.iiif_url+'/'
 	const artPage = artInfo.data.pagination
-	console.log(artConfig)
+	console.log("A Sunday on La Grande Jatte — 1884".length)
 	res.render('arts/index', {artData, artConfig, page, ...req.session})
 })
 
