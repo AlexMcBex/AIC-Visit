@@ -1,0 +1,14 @@
+{% layout 'layout.liquid' %}
+{% block content %}
+  <img
+    src="{{ artConfig  }}{{ artData.image_id }}/full/843,/0/default.jpg"
+    style="width: 100%"
+    alt="{{ art.alt_text }}">
+    <div class="card">
+        <div class="card-header text-center display-6 bg-dark text-light">{{artData.title}}</div>
+        <div class="card-body bg-dark text-light">{{ artData.artist_display }}</div>
+        <div class="card-footer bg-dark">
+            <a href="/arts" class="btn btn-success">All Art</a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% layout 'layout.liquid' %}
+{% block content %}
+  <div class="container-md">
+    <div class="text-center">
+      <h2 class="display-4">Art Pieces</h2>
+      {% if page <= 1 %}
+        <div class="btn" >Previous Page</div>
+      {% else %}
+      <a href="/arts?page={{ page | minus: 1 }}" class="btn btn-success">Previous Page</a>
+    {% endif %}
+    <a href="/arts?page={{ page | plus: 1 }}" class="btn btn-success">Next Page</a>
+    </div>
+    <div class="row">
+      {% for art in artData %}
+        {% if art.image_id %}
+          <div class="card mb-3 bg-dark text-light" style="width: 100vh;">
+            <h5 class="card-header">{{ art.title }}</h5>
+            <div class="card-body">
+
+              <a href="/arts/{{ art.id }}" class="art">
+                <img
+                  src="{{ artConfig  }}{{ art.image_id }}/full/843,/0/default.jpg"
+                  style="width: 100%"
+                  alt="{{ art.alt_text }}">
+              </a>
+              <div class="card-footer">
+
+                <p class="card-text">
+                  {{ art.artist_display }}
+                </p>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

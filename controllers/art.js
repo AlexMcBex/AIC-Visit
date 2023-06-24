@@ -1,6 +1,6 @@
 // Import Dependencies
 const express = require('express')
-const Example = require('../models/example')
+// const Example = require('../models/example')
 const user = require('./user')
 const { default: axios } = require('axios')
 
@@ -13,24 +13,28 @@ const router = express.Router()
 // Routes
 
 // index ALL
-// router.get('/', (req, res) => {
-// 	Example.find({})
-// 	.then(examples => {
-// 			const username = req.session.username
-// 			const loggedIn = req.session.loggedIn
-			
-// 			res.render('examples/index', { examples, username, loggedIn })
-// 		})
-// 		.catch(error => {
-// 			res.redirect(`/error?error=${error}`)
-// 		})
-// })
 router.get('/', async (req,  res)=>{
-	const artInfo = await axios(`${process.env.API_URL}?fields=id,title,artist_display,image_id,alt_text`)
+	let page
+	if(req.query.page && req.query.page !== 1){
+		page = req.query.page
+	}else{
+		page = 1
+	}
+	const artInfo = await axios(`${process.env.API_URL}/search?fields=id,title,artist_display,image_id,alt_text&page=${page}&limit=50&q=`)
 	const artData = artInfo.data.data
 	const artConfig = artInfo.data.config.iiif_url+'/'
+	const artPage = artInfo.data.pagination
 	console.log(artConfig)
-	res.render('examples/index', {artData, artConfig, ...req.session})
+	res.render('arts/index', {artData, artConfig, page, ...req.session})
+})
+
+// show route
+router.get('/:id', async (req, res) => {
+	const artId = req.params.id
+	const artInfo = await axios(`${process.env.API_URL}/${artId}`)
+	const artData = artInfo.data.data
+	const artConfig = artInfo.data.config.iiif_url+'/'
+	res.render('arts/show', { artData, artConfig, ...req.session})
 })
 
 // Authorization middleware
@@ -45,13 +49,15 @@ router.use((req, res, next) => {
 		res.redirect('/auth/login')
 	}
 })
-// index that shows only the user's examples
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////
+// index that shows only the user's arts
 router.get('/mine', (req, res) => {
 	// destructure user info from req.session
     const { username, userId, loggedIn } = req.session
 	Example.find({ owner: userId })
-	.then(examples => {
-		res.render('examples/index', { examples, username, loggedIn })
+	.then(arts => {
+		res.render('arts/index', { arts, username, loggedIn })
 	})
 		.catch(error => {
 			res.redirect(`/error?error=${error}`)
@@ -61,7 +67,7 @@ router.get('/mine', (req, res) => {
 	// new route -> GET route that renders our page with the form
 	router.get('/new', (req, res) => {
 	const { username, userId, loggedIn } = req.session
-	res.render('examples/new', { username, loggedIn })
+	res.render('arts/new', { username, loggedIn })
 })
 
 // create -> POST route that actually calls the db and makes a new document
@@ -72,7 +78,7 @@ router.post('/', (req, res) => {
 	Example.create(req.body)
 		.then(example => {
 			console.log('this was returned from create', example)
-			res.redirect('/examples')
+			res.redirect('/arts')
 		})
 		.catch(error => {
 			res.redirect(`/error?error=${error}`)
@@ -82,10 +88,10 @@ router.post('/', (req, res) => {
 // edit route -> GET that takes us to the edit form view
 router.get('/:id/edit', (req, res) => {
 	// we need to get the id
-	const exampleId = req.params.id
+	const artId = req.params.id
 	Example.findById(exampleId)
 		.then(example => {
-			res.render('examples/edit', { example })
+			res.render('arts/edit', { art })
 		})
 		.catch((error) => {
 			res.redirect(`/error?error=${error}`)
@@ -94,25 +100,12 @@ router.get('/:id/edit', (req, res) => {
 
 // update route
 router.put('/:id', (req, res) => {
-	const exampleId = req.params.id
+	const artId = req.params.id
 	req.body.ready = req.body.ready === 'on' ? true : false
 
-	Example.findByIdAndUpdate(exampleId, req.body, { new: true })
-		.then(example => {
-			res.redirect(`/examples/${example.id}`)
-		})
-		.catch((error) => {
-			res.redirect(`/error?error=${error}`)
-		})
-})
-
-// show route
-router.get('/:id', (req, res) => {
-	const exampleId = req.params.id
-	Example.findById(exampleId)
-		.then(example => {
-            const {username, loggedIn, userId} = req.session
-			res.render('examples/show', { example, username, loggedIn, userId })
+	Example.findByIdAndUpdate(artId, req.body, { new: true })
+		.then(art => {
+			res.redirect(`/arts/${example.id}`)
 		})
 		.catch((error) => {
 			res.redirect(`/error?error=${error}`)
@@ -123,8 +116,8 @@ router.get('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
 	const exampleId = req.params.id
 	Example.findByIdAndRemove(exampleId)
-		.then(example => {
-			res.redirect('/examples')
+		.then(art => {
+			res.redirect('/arts')
 		})
 		.catch(error => {
 			res.redirect(`/error?error=${error}`)
