@@ -12,7 +12,8 @@ const UserSchema = new Schema(
 		password: { 
 			type: String, 
 			required: true 
-		}
+		},
+		favs:[{type: Number}]
 	},
 	{ timestamps: true }
 )

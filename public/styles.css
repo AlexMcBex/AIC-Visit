@@ -1,3 +1,13 @@
 .btn{
     margin: 5px
 }
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+}
+.block{
+    height: 80px
+}

@@ -18,7 +18,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <a href="/arts" class="ms-2 nav-link text-light">Art</a>
-
+<!--
         {% if loggedIn %}
           <a href="/arts/new" class="ms-2 nav-link text-light">New</a>
           <a href="/arts/mine" class="ms-2 nav-link text-light">My Favorites</a>
@@ -27,8 +27,9 @@
           <a href="/auth/signup" class="ms-2 nav-link text-light">Sign Up</a>
           <a href="/auth/login" class="ms-2 nav-link text-light">Sign In</a>
         {% endif %}
+        -->
         <form action="/arts/?q={{ nameTBF }}" method="GET">
-        <input style="width: 160px; height: 40px; border-radius: 3px;"  class="ms-3 mt-3" type="text" name="q" placeholder="Search Art..."><input type="submit" class="btn btn-success" value="Search" style="width: 80px; height: 40px"></form>
+        <input style="width: 160px; height: 40px; border-radius: 10px; "  class="ms-3 mt-3" type="text" name="q" placeholder="Search Art..."><input type="submit" class="btn btn-success" value="Search" style="width: 80px; height: 40px; margin-bottom: 10px; border-radius: 10px"></form>
       </div>
     </div>
   </nav>
