@@ -26,7 +26,7 @@ router.get('/', async (req,  res)=>{
 	}else{
 		search = ''
 	}
-	const artInfo = await axios(`${process.env.API_URL}/search?fields=id,title,artist_display,image_id,alt_text&page=${page}&limit=50&q=${search}`)
+	const artInfo = await axios(`${process.env.API_URL}/search?fields=id,title,artist_display,image_id,alt_text,medium_display,artist_titles&page=${page}&limit=50&q=${search}`)
 	const artData = artInfo.data.data
 	const artConfig = artInfo.data.config.iiif_url+'/'
 	const artPage = artInfo.data.pagination
@@ -37,7 +37,7 @@ router.get('/', async (req,  res)=>{
 // show route
 router.get('/:id', async (req, res) => {
 	const artId = req.params.id
-	const artInfo = await axios(`${process.env.API_URL}/${artId}`)
+	const artInfo = await axios(`${process.env.API_URL}/${artId}?fields=id,title,artist_display,image_id,alt_text,medium_display,artist_titles`)
 	const artData = artInfo.data.data
 	const artConfig = artInfo.data.config.iiif_url+'/'
 	res.render('arts/show', { artData, artConfig, ...req.session})

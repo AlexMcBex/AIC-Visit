@@ -9,7 +9,10 @@ const { Schema, model } = mongoose
 
 const favSchema = new Schema(
 	{
-        id: { type: Number, required: true },
+        apiId: { type: Number, required: true },
+		title: {type: String, required: true},
+		artist: {type: String, required: true},
+		imageSrc: {type: String, required: true},
 		owner: {
 			type: Schema.Types.ObjectID,
 			ref: 'User',
