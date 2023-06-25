@@ -3,6 +3,7 @@ const express = require('express')
 // const Example = require('../models/example')
 const user = require('./user')
 const Gallery = require('../models/gallery')
+const Art = require('../models/favorite')
 const { default: axios } = require('axios')
 
 // Create router
@@ -76,78 +77,21 @@ router.get('/addToGallery/:artId', async (req, res) => {
 		})
 	})
 
-// index that shows only the user's arts
-router.get('/mine', (req, res) => {
-	// destructure user info from req.session
-    const { username, userId, loggedIn } = req.session
-	Example.find({ owner: userId })
-	.then(arts => {
-		res.render('arts/index', { arts, username, loggedIn })
-	})
-		.catch(error => {
-			res.redirect(`/error?error=${error}`)
-		})
-	})
+// // index that shows only the user's arts
+// router.get('/mine', (req, res) => {
+// 	// destructure user info from req.session
+//     const { username, userId, loggedIn } = req.session
+// 	Art.find()
+// 	.then(arts => {
+// 		res.render('arts/index', { arts, username, loggedIn })
+// 	})
+// 		.catch(error => {
+// 			res.redirect(`/error?error=${error}`)
+// 		})
+// 	})
 	
-	// new route -> GET route that renders our page with the form
-	router.get('/new', (req, res) => {
-	const { username, userId, loggedIn } = req.session
-	res.render('arts/new', { username, loggedIn })
-})
 
-// create -> POST route that actually calls the db and makes a new document
-router.post('/', (req, res) => {
-	req.body.ready = req.body.ready === 'on' ? true : false
-
-	req.body.owner = req.session.userId
-	Example.create(req.body)
-		.then(example => {
-			console.log('this was returned from create', example)
-			res.redirect('/arts')
-		})
-		.catch(error => {
-			res.redirect(`/error?error=${error}`)
-		})
-})
-
-// edit route -> GET that takes us to the edit form view
-router.get('/:id/edit', (req, res) => {
-	// we need to get the id
-	const artId = req.params.id
-	Example.findById(exampleId)
-		.then(example => {
-			res.render('arts/edit', { art })
-		})
-		.catch((error) => {
-			res.redirect(`/error?error=${error}`)
-		})
-})
-
-// update route
-router.put('/:id', (req, res) => {
-	const artId = req.params.id
-	req.body.ready = req.body.ready === 'on' ? true : false
-
-	Example.findByIdAndUpdate(artId, req.body, { new: true })
-		.then(art => {
-			res.redirect(`/arts/${example.id}`)
-		})
-		.catch((error) => {
-			res.redirect(`/error?error=${error}`)
-		})
-})
-
-// delete route
-router.delete('/:id', (req, res) => {
-	const exampleId = req.params.id
-	Example.findByIdAndRemove(exampleId)
-		.then(art => {
-			res.redirect('/arts')
-		})
-		.catch(error => {
-			res.redirect(`/error?error=${error}`)
-		})
-})
+	
 
 // Export the Router
 module.exports = router

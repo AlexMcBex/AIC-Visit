@@ -38,7 +38,10 @@ router.get('/', (req, res) => {
 			userGalleries = galleries
 			Fav.find({ owner: userId })
 			.then(favs=>{
-				res.render('user/index', {username, loggedIn, userGalleries, favs })
+				console.log(favs)
+				const userFavs = favs
+				res.render('user/index', {username, loggedIn, userGalleries, userFavs })
+				console.log(userFavs)
 			})
 			.catch(error => {
 				res.redirect(`/error?error=${error}`)
@@ -67,6 +70,77 @@ router.get('/gallery/:id', (req, res)=>{
 	})
 })
 
+// new route -> GET route that renders our page with the form
+router.get('gallery/new', (req, res) => {
+	const { username, userId, loggedIn } = req.session
+	res.render('/gallery/new', { username, loggedIn })
+})
+
+// create -> POST route that actually calls the db and makes a new document
+router.post('/', (req, res) => {
+	req.body.ready = req.body.ready === 'on' ? true : false
+
+	req.body.owner = req.session.userId
+	Gallery.create(req.body)
+		.then(gallery => {
+			console.log('this was returned from create', gallery)
+			res.redirect('/arts')
+		})
+		.catch(error => {
+			res.redirect(`/error?error=${error}`)
+		})
+})
+
+// edit route -> GET that takes us to the edit form view
+router.get('/gallery/:id/edit', (req, res) => {
+	// we need to get the id
+	const galleryId = req.params.id
+	Gallery.findById(galleryId)
+		.then(gallery => {
+			res.render('user/edit', { gallery })
+		})
+		.catch((error) => {
+			res.redirect(`/error?error=${error}`)
+		})
+})
+
+// update route
+router.put('/gallery/:id', (req, res) => {
+	const galleryId = req.params.id
+
+	Gallery.findByIdAndUpdate(galleryId, req.body, { new: true })
+		.then(gallery => {
+			res.redirect(`/user/gallery/${gallery.id}`)
+		})
+		.catch((error) => {
+			res.redirect(`/error?error=${error}`)
+		})
+})
+
+// delete route
+router.delete('/gallery/:id', (req, res) => {
+	const galleryId = req.params.id
+	Gallery.findByIdAndRemove(galleryId)
+		.then( gallery => {
+			res.redirect('/user')
+		})
+		.catch(error => {
+			res.redirect(`/error?error=${error}`)
+		})
+})
+
+	// delete art route
+	router.delete('/gallery/:galleryId/:id', (req, res) => {
+		const artId = req.params.id
+		const galleryId = req.params.galleryId
+		Fav.findByIdAndRemove(artId)
+			.then( art => {
+				res.redirect(`/user/gallery/${galleryId}`)
+			})
+			.catch(error => {
+				res.redirect(`/error?error=${error}`)
+			})
+	})
 router.get('/gallery/:galleryId/addArt/:artId', async(req,res)=>{
 	const galleryId = req.params.galleryId
 	const artId = req.params.artId
@@ -76,7 +150,8 @@ router.get('/gallery/:galleryId/addArt/:artId', async(req,res)=>{
 		apiId : artId,
 		title: art.title,
 		artist: art.artist_display,
-		imageSrc: art.image_id
+		imageSrc: art.image_id,
+		owner: req.session.userId
 	}
 	console.log(req.body)
 	Fav.create(req.body)

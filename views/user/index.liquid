@@ -14,5 +14,39 @@
  {% endfor %}
  <hr>
  <h2>Your Favorites</h2>
+ <div class="row">
+        {% for art in userFavs %}
+            <div class="card mb-3 bg-dark text-light" style="width: 40vh; height:50vh; margin: 0 auto;">
+              <h5 class="card-header">
+                {% assign maxLength = 31 %}
+                {% assign myString = art.title %}
+  
+                {% if myString.size > maxLength %}
+                  {% assign croppedString = myString | truncate: maxLength, "..." %}
+                {% else %}
+                  {% assign croppedString = myString %}
+                {% endif %}
+                {{ croppedString }}
+              </h5>
+              <a href="/arts/{{ art.apiId }}" class="art">
+                <div class="card-body" style="background-image: url('https://www.artic.edu/iiif/2/{{ art.imageSrc }}/full/843,/0/default.jpg'); height:41vh; background-position:center"></div>
+              </a>
+              <div class="card-footer">
+  
+                <p class="card-text">
+                  {% assign maxLengthDesc = 38 %}
+                  {% assign artDesc = art.artist %}
+  
+                  {% if artDesc.size > maxLengthDesc %}
+                    {% assign croppedDesc = artDesc | truncate: maxLengthDesc, "..." %}
+                  {% else %}
+                    {% assign croppedDesc = artDesc %}
+                  {% endif %}
+                  {{ croppedDesc }}
+                </p>
+              </div>
+            </div>
+        {% endfor %}
+      </div>
  </div>
 {% endblock %}
