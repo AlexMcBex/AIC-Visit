@@ -2,6 +2,7 @@
 const express = require('express')
 // const Example = require('../models/example')
 const user = require('./user')
+const Gallery = require('../models/gallery')
 const { default: axios } = require('axios')
 
 // Create router
@@ -57,6 +58,24 @@ router.use((req, res, next) => {
 })
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////
+
+
+router.get('/addToGallery/:artId', async (req, res) => {
+	const artId = req.params.artId
+	const artInfo = await axios(`${process.env.API_URL}/${artId}?fields=id,title,artist_display,image_id,alt_text,medium_display,artist_titles`)
+	const artData = artInfo.data
+	const { username, loggedIn, userId } = req.session
+	Gallery.find({ owner: userId })
+	.populate('owner')
+	.populate('owner.username', '-password')
+		.then(galleries => {
+		res.render('arts/addToGallery', { username, artData, artId, loggedIn, userId, galleries, artId })
+		})
+		.catch(error => {
+			res.redirect(`/error?error=${error}`)
+		})
+	})
+
 // index that shows only the user's arts
 router.get('/mine', (req, res) => {
 	// destructure user info from req.session

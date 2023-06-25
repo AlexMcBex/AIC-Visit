@@ -1,0 +1,23 @@
+{% layout 'layout.liquid' %}
+{% block content %}
+  <div class="container-md">
+    <h2 class="display-6 mb-0" style="align: right;"> Select the gallery you want to add <i>{{ artData.title }}</i> to...</h2>
+
+    <a href="/arts/{{ artData.id }}" class="btn btn-warning" style="align: right">Go Back</a>
+    <hr>
+    <div class="row">
+      {% for gallery in galleries %}
+        <div class="card ms-2 mb-2" style="width: 20rem;border: 3px solid rgb(88, 88, 88)">
+          <h4 class="card-header">{{ gallery.title }}</h4>
+          <div class="card-body">
+          <h6>{{ team.description }}</h6>
+            <a href="/user/gallery/{{ gallery.id }}/addArt/{{ artId }}" class="btn ms-3 btn-success" style=" width:14rem">
+             Add art
+            </a>
+          </div>
+        </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

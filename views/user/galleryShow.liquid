@@ -1,11 +1,64 @@
 {% layout 'layout.liquid' %}
 {% block content %}
   <div class="container-lg">
-    <h1>{{gallery.title}}</h1>
     {% if gallery.arts.size < 1 %}
     <h2>This gallery is empty... <br>once you add art it will be displayed here!</h2>
   {% else %}
-
+      <div class="text-center">
+        <h2 class="display-4">
+        Gallery <i>{{gallery.title}}</i> <br>by the user <i>{{gallery.owner.username}}</i>
+        </h2>
+      </div>
+      <div class="row">
+        {% for art in gallery.arts %}
+          {% if art.imageSrc %}
+            <div class="card mb-3 bg-dark text-light" style="width: 40vh; height:50vh; margin: 0 auto;">
+              <h5 class="card-header">
+                {% assign maxLength = 31 %}
+                {% assign myString = art.title %}
+  
+                {% if myString.size > maxLength %}
+                  {% assign croppedString = myString | truncate: maxLength, "..." %}
+                {% else %}
+                  {% assign croppedString = myString %}
+                {% endif %}
+                {{ croppedString }}
+              </h5>
+              <a href="/arts/{{ art.apiId }}" class="art">
+                <div class="card-body" style="background-image: url('https://www.artic.edu/iiif/2/{{ art.imageSrc }}/full/843,/0/default.jpg'); height:41vh; background-position:center"></div>
+              </a>
+              <div class="card-footer">
+  
+                <p class="card-text">
+                  {% assign maxLengthDesc = 38 %}
+                  {% assign artDesc = art.artist %}
+  
+                  {% if artDesc.size > maxLengthDesc %}
+                    {% assign croppedDesc = artDesc | truncate: maxLengthDesc, "..." %}
+                  {% else %}
+                    {% assign croppedDesc = artDesc %}
+                  {% endif %}
+                  {{ croppedDesc }}
+                </p>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+  
+      <div class="text-center">
+        <small>page: {{ page }}</small><br>
+        {% if page <= 1 %}
+          <div class="btn">Previous Page</div>
+        {% else %}
+          <a href="/arts?page={{ page | minus: 1 }}&q={{ search }}" class="btn btn-success">Previous Page</a>
+        {% endif %}
+        {% if artData.size < 50 %}
+          <div class="btn">Previous Page</div>
+        {% else %}
+          <a href="/arts?page={{ page | plus: 1 }}&q={{ search }}" class="btn btn-success">Next Page</a>
+        {% endif %}
+      </div>
     {% endif %}
   </div>
 {% endblock %}

@@ -6,6 +6,7 @@ const User = require('../models/user')
 const Gallery = require('../models/gallery')
 const Fav = require('../models/favorite')
 const bcrypt = require('bcryptjs')
+const { default: axios } = require('axios')
 
 ////////////////////////////////////////////
 // Create router
@@ -58,12 +59,45 @@ router.get('/gallery/:id', (req, res)=>{
 
 	.then(gallery =>{
 	const { username, userId, loggedIn } = req.session
+	console.log(gallery.arts)
 	res.render('user/galleryShow', {...req.session, gallery})
 	})
 	.catch(error => {
 		res.redirect(`/error?error=${error}`)
 	})
 })
+
+router.get('/gallery/:galleryId/addArt/:artId', async(req,res)=>{
+	const galleryId = req.params.galleryId
+	const artId = req.params.artId
+	const artInfo = await axios(`${process.env.API_URL}/${artId}?fields=id,title,artist_display,image_id,alt_text,medium_display,artist_titles`)
+	const art = artInfo.data.data
+	req.body = {
+		apiId : artId,
+		title: art.title,
+		artist: art.artist_display,
+		imageSrc: art.image_id
+	}
+	console.log(req.body)
+	Fav.create(req.body)
+	.then(fav=>{
+		Gallery.findById(galleryId)
+		.then(gallery=>{
+			gallery.arts.push(fav)
+			return gallery.save()
+		})
+		.then(gallery=>{
+			res.redirect(`/user/gallery/${gallery.id}`)
+		})
+		.catch(err =>{
+			res.redirect(`/error?error=${err}`)
+			})
+	})
+	.catch(err =>{
+		res.redirect(`/error?error=${err}`)
+		})
+
+} )
 
 // Export the Router
 module.exports = router

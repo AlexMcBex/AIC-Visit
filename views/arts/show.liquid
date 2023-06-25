@@ -10,7 +10,12 @@
         {{ artData.medium_display }}</div>
         <div class="card-footer bg-dark">
             <a href="/arts" class="btn btn-success">All Art</a>
-            <a href="/arts?q={{ artData.artist_titles[0] }}" class="btn btn-success">Search for "{{artData.artist_titles[0] }}"</a>
+            <a href="/arts?q={{ artData.artist_titles[0] }}" class="btn btn-success">Search for "{{artData.artist_titles[0] }}"</a><br>
+            {% if loggedIn %}
+            <a class="btn btn-primary mb-3 mt-3" href="/arts/addToGallery/{{ artData.id }}">Add  art to a gallery</a><br>
+            {% else %}
+            <div class="mb-3 text-white"> <a href="/auth/login" class="btn btn-primary btn-sm">Sign In</a> with your account to add this art to a gallery</div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

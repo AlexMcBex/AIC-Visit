@@ -22,7 +22,7 @@ const gallerySchema = new Schema(
 	{ timestamps: true }
 )
 
-const Gallery = model('Galler', gallerySchema)
+const Gallery = model('Gallery', gallerySchema)
 
 /////////////////////////////////
 // Export our Model
