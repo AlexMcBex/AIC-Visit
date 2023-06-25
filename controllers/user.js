@@ -3,6 +3,8 @@
 ////////////////////////////////////////////
 const express = require('express')
 const User = require('../models/user')
+const Gallery = require('../models/gallery')
+const Fav = require('../models/favorite')
 const bcrypt = require('bcryptjs')
 
 ////////////////////////////////////////////
@@ -21,7 +23,7 @@ router.get('/signup', (req, res) => {
 // POST to send the signup info
 router.post('/signup', async (req, res) => {
 	// set the password to hashed password
-  req.body.password = await bcrypt.hash(
+	req.body.password = await bcrypt.hash(
 		req.body.password,
 		await bcrypt.genSalt(10)
 	)
@@ -47,7 +49,7 @@ router.post('/login', async (req, res) => {
 	// console.log('request object', req)
 	// get the data from the request body
 	console.log('req.body', req.body);
-	
+
 	const { username, password } = req.body
 	// then we search for the user
 	User.findOne({ username: username })
@@ -60,13 +62,13 @@ router.post('/login', async (req, res) => {
 
 				if (result) {
 					console.log('the user', user);
-					
+
 					// store some properties in the session
 					req.session.username = user.username
 					req.session.loggedIn = true
 					req.session.userId = user.id
 
-          			const { username, loggedIn, userId } = req.session
+					const { username, loggedIn, userId } = req.session
 
 					console.log('session user id', req.session.userId)
 					// redirect to /examples if login is successful
@@ -83,7 +85,7 @@ router.post('/login', async (req, res) => {
 		// catch any other errors that occur
 		.catch((error) => {
 			console.log('the error', error);
-			
+
 			res.redirect(`/error?error=${error}`)
 		})
 })
@@ -93,6 +95,24 @@ router.get('/logout', (req, res) => {
 	req.session.destroy(() => {
 		res.redirect('/')
 	})
+})
+
+// user route -> shows user collections
+router.get('/', (req, res) => {
+	const { username, userId, loggedIn } = req.session
+	Gallery.find({ owner: userId })
+		.then(galleries => {
+			Fav.find({ owner: userId })
+			.then(favs=>{
+				res.render('user/index', {username, loggedIn })
+			})
+			.catch(error => {
+				res.redirect(`/error?error=${error}`)
+			})
+		})
+		.catch(error => {
+			res.redirect(`/error?error=${error}`)
+		})
 })
 
 // Export the Router
