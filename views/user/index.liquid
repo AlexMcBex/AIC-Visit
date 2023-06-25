@@ -5,11 +5,18 @@
  <hr>
  <h2>Your Galleries</h2>
  {%  for gallery in userGalleries %}
-  <div class="card">
+  <div class="card" style="width:30vh;">
     <div class="card-header">
     {{gallery.title}}
     </div>
-    <a href="/user/gallery/{{gallery.id}}" class="btn btn-success">Visit {{gallery.title}}</a>
+    <a href="/user/gallery/{{gallery.id}}" class="btn btn-success">Visit {{gallery.title}}</a><form 
+    action="/user/gallery/{{ gallery.id }}/?_method=DELETE"
+    method="POST"
+    style="display: inline">
+    <input type="submit"
+    value="Delete {{gallery.title}}"
+    class="btn btn-danger"
+    style="display:inline"></form>
   </div>
  {% endfor %}
  <hr>

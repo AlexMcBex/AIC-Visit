@@ -71,20 +71,19 @@ router.get('/gallery/:id', (req, res)=>{
 })
 
 // new route -> GET route that renders our page with the form
-router.get('gallery/new', (req, res) => {
+router.get('/newGallery', (req, res) => {
 	const { username, userId, loggedIn } = req.session
-	res.render('/gallery/new', { username, loggedIn })
+	res.render('user/new', { username, loggedIn, userId })
 })
 
 // create -> POST route that actually calls the db and makes a new document
 router.post('/', (req, res) => {
-	req.body.ready = req.body.ready === 'on' ? true : false
 
 	req.body.owner = req.session.userId
 	Gallery.create(req.body)
 		.then(gallery => {
 			console.log('this was returned from create', gallery)
-			res.redirect('/arts')
+			res.redirect('/user')
 		})
 		.catch(error => {
 			res.redirect(`/error?error=${error}`)
