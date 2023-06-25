@@ -1,5 +1,18 @@
 {% layout 'layout.liquid' %}
 {% block content %}
   <div class="container-lg">
- <h1>user page</h1>  </div>
+ <h1>Your user page</h1>  
+ <hr>
+ <h2>Your Galleries</h2>
+ {%  for gallery in userGalleries %}
+  <div class="card">
+    <div class="card-header">
+    {{gallery.title}}
+    </div>
+    <a href="/user/gallery/{{gallery.id}}" class="btn btn-success">Visit {{gallery.title}}</a>
+  </div>
+ {% endfor %}
+ <hr>
+ <h2>Your Favorites</h2>
+ </div>
 {% endblock %}

@@ -10,7 +10,6 @@ const { Schema, model } = mongoose
 const gallerySchema = new Schema(
 	{
 		title: { type: String, required: true },
-        amount: { type: Number, required: true },
 		arts: [ {
 			type: Schema.Types.ObjectID,
 			ref: 'Fav'

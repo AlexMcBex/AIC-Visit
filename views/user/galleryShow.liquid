@@ -1,0 +1,11 @@
+{% layout 'layout.liquid' %}
+{% block content %}
+  <div class="container-lg">
+    <h1>{{gallery.title}}</h1>
+    {% if gallery.arts.size < 1 %}
+    <h2>This gallery is empty... <br>once you add art it will be displayed here!</h2>
+  {% else %}
+
+    {% endif %}
+  </div>
+{% endblock %}

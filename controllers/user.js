@@ -27,11 +27,20 @@ router.post('/signup', async (req, res) => {
 		req.body.password,
 		await bcrypt.genSalt(10)
 	)
+	let newUser
 	// create a new user
 	User.create(req.body)
 		// if created successfully redirect to login
 		.then((user) => {
-			res.redirect('/auth/login')
+			newUser = user
+			Gallery.create({
+				title: 'Favorites',
+				owner: newUser._id
+			})
+			.then(gallery=>{
+				console.log(gallery)
+				res.redirect('/auth/login')
+			})
 		})
 		// if an error occurs, send err
 		.catch((error) => {
@@ -97,23 +106,6 @@ router.get('/logout', (req, res) => {
 	})
 })
 
-// user route -> shows user collections
-router.get('/', (req, res) => {
-	const { username, userId, loggedIn } = req.session
-	Gallery.find({ owner: userId })
-		.then(galleries => {
-			Fav.find({ owner: userId })
-			.then(favs=>{
-				res.render('user/index', {username, loggedIn })
-			})
-			.catch(error => {
-				res.redirect(`/error?error=${error}`)
-			})
-		})
-		.catch(error => {
-			res.redirect(`/error?error=${error}`)
-		})
-})
 
 // Export the Router
 module.exports = router
