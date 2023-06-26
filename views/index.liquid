@@ -1,29 +1,63 @@
 {% layout "layout.liquid" %}
 {% block content %}
-    <div class="home-page"
-    style="background-image:url('https://www.artic.edu/iiif/2/e966799b-97ee-1cc6-bd2f-a94b4b8bb8f9/full/843,/0/default.jpg'); height: 100vh">
-<div class="container-lg text-center">
-    <div class="home-header mb-2">
-        <h1 >Art Institute of Chicago Visit</h1>
+  <div class="home-page" style="background-image:url('https://www.artic.edu/iiif/2/e966799b-97ee-1cc6-bd2f-a94b4b8bb8f9/full/843,/0/default.jpg'); height: 100vh">
+    <div class="container-lg text-center">
+      <div class="home-header mb-2">
+        <h1>Art Institute of Chicago Visit</h1>
 
-    </div>
-    <a href="/arts">
-    <div class="home-link mb-2 btn btn-dark">
-        <h2 >Browse Art</h2>
-    </div>
-    </a><br>
-    <div class="home-link mb-2 btn btn-dark">
-        <h2 >PlaceHolder</h2>
-
-    </div><br>
-    <div class="home-link mb-2 btn btn-dark">
+      </div>
+      <a href="/arts">
+        <div class="home-link mb-2 btn btn-dark">
+          <h2>Browse Art</h2>
+        </div>
+      </a><br>
+      {% if loggedIn %}
+      <a href="/user/newGallery">
+      <div class="home-link mb-2 btn btn-dark">
+          <h2 >New Gallery</h2>
+      </div>
+      </a><br>
+      <a href="/user">
+      <div class="home-link mb-2 btn btn-dark">
+          <h2 >Your Page</h2>
+      </div>
+      </a><br>
+      <a href="/auth/logout">
+      <div class="home-link mb-2 btn btn-dark">
+          <h2 >Log Out</h2>
+      </div>
+      </a><br>
+      
+    {% else %}
+    <a href="/auth/signup">
+      <div class="home-link mb-2 btn btn-dark">
+          <h2 >Sign Up</h2>
+      </div>
+      </a><br>
+      <a href="/auth/login">
+      <div class="home-link mb-2 btn btn-dark">
+          <h2 >Log In</h2>
+      </div>
+      </a><br>
+      
+      {% endif %}
+      <div class="home-link mb-2 btn btn-dark">
         <form action="/arts/?q={{ nameTBF }}" method="GET">
-        <input style="width: 160px; height: 40px; border-radius: 10px; "  class="ms-3 mt-3" type="text" name="q" placeholder="Search Art..."><input type="submit" class="btn btn-success" value="Search" style="width: 80px; height: 40px; margin-bottom: 10px; border-radius: 10px"></form>
+          <input
+            style="width: 160px; height: 40px; border-radius: 10px; "
+            class="ms-3 mt-3"
+            type="text"
+            name="q"
+            placeholder="Search Art..."><input
+            type="submit"
+            class="btn btn-success"
+            value="Search"
+            style="width: 80px; height: 40px; margin-bottom: 10px; border-radius: 10px"></form>
 
-    </div><br>
-</div>
+      </div><br>
+    </div>
 
-</div>
+  </div>
 
 
 {% endblock %}
